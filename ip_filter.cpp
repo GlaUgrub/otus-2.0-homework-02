@@ -1,24 +1,9 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
-#include <string>
-#include <vector>
 #include <fstream>
-#include <stdint.h>
 #include <algorithm>
-#include <array>
-
-// ("",  '.') -> [""]
-// ("11", '.') -> ["11"]
-// ("..", '.') -> ["", "", ""]
-// ("11.", '.') -> ["11", ""]
-// (".11", '.') -> ["", "11"]
-// ("11.22", '.') -> ["11", "22"]
-
-using ip_addr_str_t = std::vector<std::string>;
-using ip_addr_num_t = std::array<uint8_t, 4>;
-using ip_pool_t = std::vector<ip_addr_str_t>;
-using index_t = uint32_t;
+#include "ip_tools.h"
 
 ip_addr_str_t split(const std::string &str, char d)
 {
@@ -50,56 +35,6 @@ void read_from_file(const std::string& file_name, ip_pool_t& ip_pool)
     }
 }
 
-void get_numerical_ip(const ip_addr_str_t& ip_str, ip_addr_num_t& ip_num)
-{
-    // TODO: check that valid IP address is present in "ip"
-
-    int idx = 0;
-
-    for (const auto& ip : ip_str)
-    {
-        // TODO: add range check for number
-        ip_num.at(idx++) = static_cast<uint8_t>(std::stoi(ip));
-    }
-}
-
-index_t generate_index(const ip_addr_num_t& ip_num)
-{
-    index_t index = 0;
-    int shift = 24;
-
-    for (unsigned int i = 0; i < ip_num.size(); i++, shift -= 8)
-    {
-        index |= (ip_num.at(i) << shift);
-    }
-
-    return index;
-}
-
-void generate_ip(index_t index, ip_addr_num_t& ip)
-{
-    int shift = 24;
-
-    for (unsigned int i = 0; i < ip.size(); i++, shift -= 8)
-    {
-        ip.at(i) = (index >> shift);
-    }
-}
-
-void print_ip(const ip_addr_num_t& ip)
-{
-    for (unsigned int i = 0; i < ip.size(); i++)
-    {
-        std::cout << std::dec <<+ip.at(i);
-        if (i < ip.size() - 1)
-        {
-            std::cout << ".";
-        }
-    }
-
-    std::cout << std::endl;
-}
-
 bool check_ip(const uint8_t*)
 {
     return true;
@@ -119,7 +54,7 @@ int main()
 
         // 1. Read IPs from source
         ip_pool_t ip_pool_str;
-        read_from_file(file_name, ip_pool_str);
+        //read_from_file(file_name, ip_pool_str);
 
         // 2. Convert literal IPs to numerical indexes for easy sorting
         std::vector<index_t> ip_index_pool;
