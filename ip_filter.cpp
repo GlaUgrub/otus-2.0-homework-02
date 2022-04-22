@@ -35,6 +35,15 @@ void read_from_file(const std::string& file_name, ip_pool_t& ip_pool)
     }
 }
 
+void read_from_console(ip_pool_t& ip_pool)
+{
+    for(std::string line; std::getline(std::cin, line);)
+    {
+        std::vector<std::string> v = split(line, '\t');
+        ip_pool.push_back(split(v.at(0), '.'));
+    }
+}
+
 bool check_ip(const uint8_t*)
 {
     return true;
@@ -50,11 +59,11 @@ int main()
 {
     try
     {
-        std::string file_name("/media/glaugrub/Data/git/otus-homeworks/otus-2.0-homework-02/ip_filter.tsv");
-
         // 1. Read IPs from source
         ip_pool_t ip_pool_str;
+        //std::string file_name("/media/glaugrub/Data/git/otus-homeworks/otus-2.0-homework-02/ip_filter.tsv");
         //read_from_file(file_name, ip_pool_str);
+        read_from_console(ip_pool_str);
 
         // 2. Convert literal IPs to numerical indexes for easy sorting
         std::vector<index_t> ip_index_pool;
