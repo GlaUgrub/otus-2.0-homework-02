@@ -6,6 +6,7 @@
 #include <fstream>
 #include <stdint.h>
 #include <algorithm>
+#include <array>
 
 // ("",  '.') -> [""]
 // ("11", '.') -> ["11"]
