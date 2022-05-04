@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <chrono>
 #include "ip_tools.h"
 
 ip_addr_str_t split(const std::string &str, char d)
@@ -55,15 +56,32 @@ bool check_ip(const uint8_t* ip_array, uint8_t val, Types ... args)
     return (*ip_array == val) && check_ip(ip_array + 1, args...);
 }
 
-int main()
+uint64_t time_ms() {
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+}
+
+int main(int argc, char** argv)
 {
     try
     {
         // 1. Read IPs from source
         ip_pool_t ip_pool_str;
-        //std::string file_name("/media/glaugrub/Data/git/otus-homeworks/otus-2.0-homework-02/ip_filter.tsv");
-        //read_from_file(file_name, ip_pool_str);
-        read_from_console(ip_pool_str);
+        if (argc == 1)
+        {
+            read_from_console(ip_pool_str);
+        }
+        else
+        {
+            std::string file_name("/media/glaugrub/Data/git/otus-homeworks/otus-2.0-homework-02/ip_filter.tsv");
+            if (argc == 2)
+            {
+                file_name = argv[1];
+                read_from_file(file_name, ip_pool_str);
+            }
+        }
+
+        const uint64_t start_ms = time_ms();
 
         // 2. Convert literal IPs to numerical indexes for easy sorting
         std::vector<index_t> ip_index_pool;
@@ -127,6 +145,10 @@ int main()
         {
             print_ip(*ip++);
         }
+
+        const uint64_t end_ms = time_ms();
+
+        std::cout << "Duration in ms is " << end_ms - start_ms << std::endl;
     }
     catch(const std::exception &e)
     {
