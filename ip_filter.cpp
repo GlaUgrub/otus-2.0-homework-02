@@ -77,8 +77,8 @@ int main(int argc, char** argv)
             if (argc == 2)
             {
                 file_name = argv[1];
-                read_from_file(file_name, ip_pool_str);
             }
+            read_from_file(file_name, ip_pool_str);
         }
 
         const uint64_t start_ms = time_ms();
